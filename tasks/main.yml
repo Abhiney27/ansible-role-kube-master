@@ -25,7 +25,7 @@
        - docker
 
 - name: Pull required Images
-  command: kubeadm config images pull
+  shell: kubeadm config images pull
 
 - name: Change Cgroup Driver
   copy:
@@ -44,10 +44,10 @@
       src: k8s.conf
 
 - name: Restarting sysctl
-  command: "sysctl --system"
+  shell: "sysctl --system"
 
 - name: Initialising Kubeadm
-  command: "kubeadm init --pod-network-cidr=10.250.0.0/16 --ignore-preflight-errors=NumCPU --ignore-preflight-errors=Mem"
+  shell: "kubeadm init --pod-network-cidr=10.250.0.0/16 --ignore-preflight-errors=NumCPU --ignore-preflight-errors=Mem"
        
 - name: Creating .kube directory
   file:
@@ -55,7 +55,7 @@
       state: directory
 
 - name: Copying admin.conf to .kube
-  command: "cp -i /etc/kubernetes/admin.conf $HOME/.kube/config"
+  shell: "cp -i /etc/kubernetes/admin.conf $HOME/.kube/config"
 
 - name: Setup overlay network using flannel
-  command: "kubectl apply  -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml"
+  shell: "kubectl apply  -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml"
