@@ -28,11 +28,11 @@ galaxy_info:
   # https://galaxy.ansible.com/api/v1/platforms/
   #
   platforms:
-  - name: ubuntu
+  - name: Ubuntu
     versions:
     - all
   #   - 25
-  - name: redhat
+  - name: Redhat
     versions:
     - all
   #   - 1.0
