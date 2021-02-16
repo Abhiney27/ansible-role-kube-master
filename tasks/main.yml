@@ -1,47 +1,49 @@
 - name: Configuring Yum Repository for Kubernetes 
   yum_repository:
-             name: kubernetes.repo
-             description: Kubernetes Repos
-             baseurl: https://packages.cloud.google.com/yum/repos/kubernetes-el7-\$basearch
-             gpgcheck: yes
-             enabled: yes
-             repo_gpgcheck: yes
-             gpgkey: https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+        name: kubernetes.repo
+        description: Kubernetes Repos
+        baseurl: https://packages.cloud.google.com/yum/repos/kubernetes-el7-\$basearch
+        gpgcheck: yes
+        enabled: yes
+        repo_gpgcheck: yes
+        gpgkey: https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+             
 - name: Install Kubeadm , docker and iproute-tc  software
   package:
-       name: "{{ item }}"
-       state: present
+    name: "{{ item }}"
+    state: present
   loop: 
-      - "docker"
-      - "kubeadm"
-      - "iproute-tc"
+    - "docker"
+    - "kubeadm"
+    - "iproute-tc"
+
 - name: Enabel services for docker and kubectl 
   service:
-      name: "{{ item }}"
-      state: started
-      enabled: yes
+    name: "{{ item }}"
+    state: started
+    enabled: yes
   loop:
-       - kubelet
-       - docker
+    - kubelet
+    - docker
 
 - name: Pull required Images
   command: kubeadm config images pull
 
 - name: Change Cgroup Driver
   copy:
-     dest: /etc/docker/daemon.json
-     src: daemon.json
+    dest: /etc/docker/daemon.json
+    src: daemon.json
 
        
 - name: Restart docker service
   service:
-        name: docker
-        state: restarted
+    name: docker
+    state: restarted
 
 - name: Updating k8s config file
   copy:
-      dest: /etc/sysctl.d/k8s.conf
-      src: k8s.conf
+    dest: /etc/sysctl.d/k8s.conf
+    src: k8s.conf
 
 - name: Restarting sysctl
   command: "sysctl --system"
@@ -51,8 +53,8 @@
        
 - name: Creating .kube directory
   file:
-      path: $HOME/.kube
-      state: directory
+    path: $HOME/.kube
+    state: directory
 
 - name: Copying admin.conf to .kube
   command: "cp -i /etc/kubernetes/admin.conf $HOME/.kube/config"
